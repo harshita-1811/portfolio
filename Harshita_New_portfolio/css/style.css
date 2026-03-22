@@ -1,0 +1,620 @@
+:root {
+      --paper-bg: #f8f4e6;
+      --marker-red: #d32222;
+      --marker-blue: #1b4b9b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-image: url('../assets/images/blank_paper.png');
+      background-size: 100vw auto;
+      background-repeat: repeat;
+      background-color: #f7f3e8;
+      /* fallback color */
+      color: black;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: 100%;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* -------------------------------------
+           SHARED SCRAPBOOK SECTION
+           ------------------------------------- */
+    .scrapbook-hero,
+    .scrapbook-slide2,
+    .scrapbook-slide3,
+    .scrapbook-slide4,
+    .scrapbook-slide5 {
+      position: relative;
+      width: 100%;
+      /* The aspect ratio of the provided backgrounds */
+      aspect-ratio: 2388 / 1346;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      display: block;
+      overflow: hidden;
+    }
+
+    .scrapbook-hero {
+      background-image: url('../assets/images/bg_template.png');
+    }
+
+    .scrapbook-slide2 {
+      background-image: url('../assets/images/slide_2.png');
+      overflow: visible;
+      /* Enables text to safely spill instead of forcefully cropping */
+      margin-bottom: 4vw;
+      /* Appends physical spacing equivalent to ~2-3 lines securely */
+      z-index: 10;
+      /* Maintain text legibility above following slide layovers */
+    }
+
+    .scrapbook-slide3 {
+      background-image: url('../assets/images/slide_3.png');
+    }
+
+    .scrapbook-slide4 {
+      background-image: url('../assets/images/slide_4.png');
+    }
+
+    .scrapbook-slide5 {
+      background-image: url('../assets/images/slide_5_new.png');
+    }
+
+    /* -------------------------------------
+           TEXT CONTENT
+           ------------------------------------- */
+    .about-text {
+      position: absolute;
+      top: 40%;
+      left: 12%;
+      width: 35%;
+      /* Matches the blue scribble vibe */
+      font-size: clamp(1.2rem, 2.5vw, 2.8rem);
+      line-height: 1.5;
+      transform: rotate(-2deg);
+    }
+
+    .about-text p {
+      margin-bottom: 1rem;
+    }
+
+    /* -------------------------------------
+           STICKER SPOTS (Anchors for JS)
+           ------------------------------------- */
+    .spot-hero {
+      position: absolute;
+      bottom: -5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28%;
+      height: 60%;
+      /* Approximate bounds */
+    }
+
+    .spot-about {
+      position: absolute;
+      bottom: -2%;
+      right: 8%;
+      width: 30%;
+      height: 65%;
+    }
+
+    /* -------------------------------------
+           WORK EXPERIENCE GRID
+           ------------------------------------- */
+    .work-grid {
+      position: absolute;
+      top: 55%;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      z-index: 10;
+      padding: 0 4%;
+    }
+
+    .work-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      width: 20%;
+    }
+
+    .organic-circle {
+      width: clamp(70px, 12vw, 160px);
+      aspect-ratio: 1;
+      background: transparent;
+      border: none;
+      border-radius: 65% 35% 75% 25% / 30% 60% 40% 70%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.05), 3px 6px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, border-radius 0.3s ease;
+    }
+
+    .organic-circle:hover {
+      transform: scale(1.05) rotate(3deg) !important;
+      border-radius: 40% 60% 30% 70% / 60% 40% 70% 30% !important;
+    }
+
+    /* specific rotations for organic feel */
+    .work-item:nth-child(1) .organic-circle {
+      transform: rotate(-5deg);
+    }
+
+    .work-item:nth-child(2) .organic-circle {
+      border-radius: 55% 45% 60% 40% / 40% 60% 45% 55%;
+      transform: rotate(3deg);
+    }
+
+    .work-item:nth-child(3) .organic-circle {
+      border-radius: 40% 60% 50% 50% / 55% 40% 60% 45%;
+      transform: rotate(-2deg);
+    }
+
+    .work-item:nth-child(4) .organic-circle {
+      border-radius: 50% 50% 40% 60% / 40% 55% 45% 60%;
+      transform: rotate(5deg);
+    }
+
+    .organic-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Scale slightly to hide raw corners under the border mask */
+      transform: scale(1.05);
+    }
+
+    .work-text {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    /* The Global Sticker that flies around */
+    #globalSticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      pointer-events: none;
+      /* Drop shadow to make it pop like a real cutout */
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25));
+      will-change: transform, width, height, top, left;
+      transform-origin: top left;
+    }
+
+    /* -------------------------------------
+           REELS CAROUSEL
+           ------------------------------------- */
+    .reels-wrapper {
+      position: absolute;
+      top: 40%;
+      /* Pushed up to eliminate empty space */
+      left: 5%;
+      width: 90%;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .show-more-container {
+      position: relative;
+      width: 100%;
+      text-align: center;
+      padding: 4vw 0 4vw 0;
+      /* Add carefully metered padding space beneath the reels */
+      z-index: 20;
+    }
+
+    .carousel-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid var(--marker-red);
+      color: var(--marker-red);
+      font-weight: 900;
+      font-size: 1.5rem;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 20;
+      user-select: none;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .carousel-btn:hover {
+      background: var(--marker-red);
+      color: white;
+      transform: scale(1.05);
+      /* Slight pop */
+    }
+
+    .reels-container {
+      flex: 1;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      padding: 1rem 0;
+      /* Add shadow headroom */
+      /* Hide scrollbar */
+      scrollbar-width: none;
+    }
+
+    .reels-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .reels-track {
+      display: flex;
+      gap: 1.5rem;
+      width: max-content;
+    }
+
+    .reel-item {
+      display: block;
+      text-decoration: none;
+      width: 19vw;
+      background: white;
+      padding: 10px 10px 45px 10px;
+      position: relative;
+      overflow: hidden;
+      /* Prevent any iframe contents from bleeding past the card edge */
+      box-shadow: 2px 6px 15px rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .reel-item:nth-child(even) {
+      transform: rotate(3deg);
+    }
+
+    .reel-item:nth-child(odd) {
+      transform: rotate(-2deg);
+    }
+
+    .reel-item:hover {
+      transform: scale(1.05) rotate(0deg);
+      z-index: 10;
+      box-shadow: 4px 10px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    /* A tape graphic at the top of the polaroid */
+    .reel-item::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      width: 40%;
+      height: 25px;
+      background: rgba(255, 255, 230, 0.7);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 20;
+    }
+
+    .reel-photo {
+      width: 100%;
+      /* Padding-bottom trick: 9:16 = 177.7%. 
+         This gives the element actual computed height browsers understand! */
+      padding-bottom: 177.7%;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .reel-photo iframe {
+      position: absolute;
+      /* Scale the iframe up to zoom in — both enlarges the video thumbnail
+         AND pushes Instagram's header/footer outside our overflow:hidden boundary */
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border: none;
+      pointer-events: none;
+      /* Scale up by 1.5x and shift up to center on video, pushing metrics out of view */
+      transform: scale(1.5) translateY(-13%);
+      transform-origin: top center;
+    }
+
+    .reel-caption {
+      position: absolute;
+      bottom: 2%;
+      width: 100%;
+      left: 0;
+      text-align: center;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+    }
+
+    /* -------------------------------------
+           CONTACT SECTION (Slide 5)
+           ------------------------------------- */
+    .contact-info {
+      position: absolute;
+      top: 22vw;
+      left: 40%;
+      width: 45%;
+      font-size: 2.5vw;
+      /* Perfectly locked to scale with ruling lines! */
+      line-height: 2.5;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1vw;
+      /* scalable gap */
+      margin-bottom: 0.96vw;
+      /* Exact geometric height mapping to the ruled lines */
+    }
+
+    .contact-item a {
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.2s, color 0.2s;
+      white-space: nowrap;
+      /* Lock into a single line */
+    }
+
+    .contact-item a:hover {
+      color: #1b4b9b;
+      transform: scale(1.05);
+      text-decoration: underline;
+    }
+
+    .contact-icon {
+      width: clamp(25px, 3.5vw, 40px);
+      height: auto;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      /* Prevent the extraordinarily long email text from implicitly squishing it to width 0 */
+    }
+
+    .linkedin-logo:hover {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .contact-buttons {
+      position: absolute;
+      top: 55%;
+      left: 8%;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .action-btn {
+      display: inline-block;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      color: #fff;
+      background-color: #d13030;
+      /* Red marker vibe */
+      padding: 10px 30px;
+      border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+      /* Organic hand drawn border */
+      border: 3px solid #b32020;
+      text-decoration: none;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .action-btn:hover {
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 4px 8px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Hidden by default on desktop */
+    .mobile-sticker {
+      display: none;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+
+      .scrapbook-hero,
+      .scrapbook-slide2,
+      .scrapbook-slide3,
+      .scrapbook-slide4,
+      .scrapbook-slide5 {
+        aspect-ratio: auto;
+        /* Reverting 100vh lock to let the content stack more naturally since we aren't animating scroll on mobile! */
+        min-height: auto;
+        background-size: 100% auto;
+        background-position: center top;
+      }
+
+      .scrapbook-hero {
+        /* Pushes the graphic down to expose '../assets/images/blank_paper.png' above it as a top margin filler */
+        background-position: center 8vw;
+        padding-bottom: 25vw;
+      }
+
+      .scrapbook-slide2 {
+        padding-bottom: 25vw;
+        /* Expanded specific mobile padding space to reliably match 2-3 new lines of text! */
+        min-height: 55vh;
+        /* Keep some minimum to ensure aesthetic height */
+      }
+
+      .scrapbook-slide3 {
+        padding-bottom: 25vw;
+      }
+
+      .scrapbook-slide4 {
+        padding-bottom: 15vw;
+        /* Mobile_padding_removed */
+        min-height: 65vh;
+        /* Mobile_padding_removed */
+      }
+
+      .scrapbook-slide5 {
+        background-image: url('../assets/images/slide_5_mobile.png');
+        padding-bottom: 25vw;
+        min-height: 85vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Contact section overrides for mobile */
+      .contact-buttons {
+        position: relative;
+        top: auto;
+        left: auto;
+        order: 2;
+        margin-top: 15vw;
+        /* Push below contact info */
+        padding: 0 10%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+
+      .action-btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+        padding: 12px 20px;
+      }
+
+      .contact-info {
+        position: relative;
+        top: auto;
+        left: auto;
+        order: 1;
+        width: 100%;
+        margin-top: 25vw;
+        /* Mobile_padding_removed */
+        /* Push cleanly down below the Let's Connect graphic */
+        padding: 0 5%;
+        font-size: clamp(0.9rem, 4vw, 1.6rem);
+        /* Shrunk specifically to fit the exceptionally long email onto a single visual line */
+        transform: rotate(0deg);
+      }
+
+      .contact-item {
+        margin-bottom: 3vw;
+        /* Spacier clicking area scaled down slightly */
+      }
+
+      .contact-icon {
+        width: clamp(28px, 6vw, 45px);
+        /* Scaled down uniformly with text size */
+      }
+
+      /* Reels overrides for mobile */
+      /* Reels overrides for mobile */
+      .reels-wrapper {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        margin-top: 30vw;
+        /* Pushed significantly higher up (closing empty gap) */
+        padding: 0 5%;
+      }
+
+      .show-more-container {
+        padding: 5vw 0 8vw 0;
+        margin-top: 0;
+      }
+
+      .carousel-btn {
+        display: none !important;
+        /* Mobile relies specifically on smooth native swiping! */
+      }
+
+      .reels-container {
+        padding: 0;
+      }
+
+      .reels-track {
+        gap: 6vw;
+        /* Spread phones out slightly */
+      }
+
+      /* Polaroid casing overrides for Mobile size */
+      .reel-item {
+        width: 42vw;
+        padding: 8px 8px 35px 8px;
+      }
+
+      /* Work Section Grid overrides */
+      .work-grid {
+        position: relative;
+        top: auto;
+        left: auto;
+        /* Push the grid safely below the "WORK EXPERIENCE" text graphic */
+        margin-top: 50vw;
+        padding: 0 5%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8vw 5vw;
+        justify-items: center;
+      }
+
+      .work-item {
+        width: 100%;
+      }
+
+      .organic-circle {
+        width: 35vw;
+        padding: 0;
+      }
+
+      .work-text {
+        font-size: clamp(1.3rem, 5vw, 1.8rem);
+        line-height: 1.1;
+      }
+
+      /* Hide the global scrolling logic and anchor spots entirely on mobile */
+      #globalSticker,
+      .spot-hero,
+      .spot-about {
+        display: none !important;
+      }
+
+      /* Display a massive, static cutout on mobile as requested */
+      .mobile-sticker {
+        display: block;
+        width: 85%;
+        margin: 0 auto;
+        /* Pushes it cleanly below the shifted 65vw top template graphic */
+        margin-top: 65vw;
+        filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25));
+      }
+
+      .about-text {
+        top: 35vw;
+        /* Mobile_padding_removed */
+        /* Safely placed below the WHO I AM bear graphic */
+        left: 5%;
+        width: 90%;
+        font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+        transform: rotate(0deg);
+      }
+    }
