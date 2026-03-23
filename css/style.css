@@ -408,11 +408,11 @@
 
     .action-btn {
       display: inline-block;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
       color: #fff;
       background-color: #d13030;
       /* Red marker vibe */
-      padding: 10px 30px;
+      padding: 8px 24px;
       border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
       /* Organic hand drawn border */
       border: 3px solid #b32020;
